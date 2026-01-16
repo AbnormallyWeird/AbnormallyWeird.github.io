@@ -1,6 +1,19 @@
 let players = [];
 let currentTeams = [];
 
+// Save players to localStorage
+function savePlayers() {
+    localStorage.setItem('players', JSON.stringify(players));
+}
+
+// Load players from localStorage
+function loadPlayers() {
+    const saved = localStorage.getItem('players');
+    if (saved) {
+        players = JSON.parse(saved);
+    }
+}
+
 // Add a new player to the list
 function addPlayer() {
     const playerInput = document.getElementById('playerName');
@@ -8,6 +21,7 @@ function addPlayer() {
     
     if (playerName && !players.includes(playerName)) {
         players.push(playerName);
+        savePlayers();
         updatePlayerList();
         playerInput.value = '';
         playerInput.focus();
@@ -46,6 +60,7 @@ function updatePlayerList() {
 // Remove a player from the list
 function removePlayer(index) {
     players.splice(index, 1);
+    savePlayers();
     updatePlayerList();
 }
 
@@ -53,6 +68,7 @@ function removePlayer(index) {
 function clearPlayers() {
     if (confirm('Are you sure you want to remove all players?')) {
         players = [];
+        savePlayers();
         updatePlayerList();
         document.getElementById('teams').style.display = 'none';
     }
@@ -144,6 +160,7 @@ function handleKeyPress(e) {
 
 // Initialize the application
 function init() {
+    loadPlayers();
     document.getElementById('playerName').addEventListener('keypress', handleKeyPress);
     updatePlayerList();
 }
